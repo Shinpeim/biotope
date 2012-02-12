@@ -1,8 +1,8 @@
 require "opengl";
 
+WINDOW_WIDTH  = 640
+WINDOW_HEIGHT = 400
 class AppController
-  WINDOW_WIDTH  = 640
-  WINDOW_HEIGHT = 400
 
   def display
     Gl.glClear(GL_COLOR_BUFFER_BIT)
