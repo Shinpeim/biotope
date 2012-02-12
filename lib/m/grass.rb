@@ -1,6 +1,6 @@
 class Grass
 
-  attr_reader :nutriment
+  attr_reader :nutriment, :min_x, :min_y, :max_x, :max_y
 
   def initialize(stage, position)
     @stage = stage
@@ -20,8 +20,8 @@ class Grass
 end
 
 module GRASS
-  WIDTH = 20
-  HEIGHT = 20
+  WIDTH = 10
+  HEIGHT = 10
 
   NUTRIMENT = 10
 end

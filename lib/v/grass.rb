@@ -2,7 +2,7 @@ require "gl"
 require "util"
 require "v/rectangle"
 
-class StageView
+class GrassView
 
   def initialize(model)
     @model = model
@@ -10,7 +10,7 @@ class StageView
 
   private
   def color
-    return 1.0, 1.0, 1.0
+    return 0.0, 1.0, 0.0
   end
 
   attr_reader :model

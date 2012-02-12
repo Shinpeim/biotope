@@ -2,14 +2,23 @@ require "opengl";
 require "m/stage"
 require "v/stage"
 
+require "m/grass"
+require "v/grass"
+
 WINDOW_WIDTH  = 640
 WINDOW_HEIGHT = 400
+
+GRASS_NUM = 50
 class AppController
 
   def display
     Gl.glClear(GL_COLOR_BUFFER_BIT)
 
     @stage[:view].draw
+
+    @grasses.each do |grass|
+      grass[:view].draw
+    end
 
     Gl.glFlush
   end
@@ -24,6 +33,21 @@ class AppController
       :model => stage_model,
       :view => StageView.new(stage_model),
     }
+
+    @grasses = []
+    GRASS_NUM.times do
+      possible_x = {min: (stage_model.min_x + 1), max: (stage_model.max_x - GRASS::WIDTH  - 1)}
+      possible_y = {min: (stage_model.min_y + 1), max: (stage_model.max_y - GRASS::HEIGHT - 1)}
+
+      x = rand(possible_x[:max] - possible_x[:min]) + possible_x[:min]
+      y = rand(possible_y[:max] - possible_y[:min]) + possible_y[:min]
+      grass_model =  Grass.new(stage_model, x: x, y: y)
+      @grasses.push ({
+        :model => grass_model,
+        :view => GrassView.new(grass_model),
+      })
+    end
+
 
     Glut.glutInitWindowPosition(100, 100)
     Glut.glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT)
