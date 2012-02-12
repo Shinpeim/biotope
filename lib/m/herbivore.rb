@@ -1,5 +1,5 @@
 require "m/living_thing.rb"
-class Grass < LivingThing
+class Herbivore < LivingThing
 
   def width
     UNIT_WIDTH
@@ -10,8 +10,7 @@ class Grass < LivingThing
   end
 
   def nutriment
-    10
+    10 * 4
   end
 
 end
-

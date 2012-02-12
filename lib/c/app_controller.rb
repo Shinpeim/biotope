@@ -8,7 +8,13 @@ require "v/grass"
 WINDOW_WIDTH  = 640
 WINDOW_HEIGHT = 400
 
+UNIT_WIDTH  = 8
+UNIT_HEIGHT = 8
+
 GRASS_NUM = 50
+
+DIRECTIONS = [:top, :right, :down, :left]
+
 class AppController
 
   def display

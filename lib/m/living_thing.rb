@@ -1,0 +1,54 @@
+class LivingThing
+
+  protected
+  def width
+    #need override
+  end
+
+  def height
+    #need override
+  end
+
+  def nutriment
+    #need override
+  end
+
+  public
+
+  def initialize(stage, position, move_unit_per_frame)
+    @stage = stage
+
+    @min_x = position[:x]
+    @min_y = position[:y]
+    @max_x = position[:x] + width
+    @max_y = position[:y] + height
+
+    @direction = DIRECTIONS[rand(DIRECTIONS.size)]
+
+    @move_unit_per_frame = move_unit_per_frame
+
+    unless @stage.include?(min: {x: @min_x, y: @min_y}, max: {x: @max_x, y: @max_y})
+        raise ArgumentError "grass must be included in stage"
+    end
+  end
+
+  def move
+    case @direction
+    when :top
+      @min_y = @min_y - @move_unit_per_frame
+      @max_y = @max_y - @move_unit_per_frame
+    when :down
+      @min_y = @min_y - @move_unit_per_frame
+      @max_y = @max_y - @move_unit_per_frame
+    when :left
+      @min_x = @min_x - @move_unit_per_frame
+      @max_x = @max_x - @move_unit_per_frame
+    when :right
+      @min_x = @min_x + @move_unit_per_frame
+      @max_x = @max_x + @move_unit_per_frame
+    end
+  end
+
+  attr_reader :nutriment, :min_x, :min_y, :max_x, :max_y, :direction
+
+end
