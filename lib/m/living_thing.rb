@@ -38,8 +38,8 @@ class LivingThing
       @min_y = @min_y - @move_unit_per_frame
       @max_y = @max_y - @move_unit_per_frame
     when :down
-      @min_y = @min_y - @move_unit_per_frame
-      @max_y = @max_y - @move_unit_per_frame
+      @min_y = @min_y + @move_unit_per_frame
+      @max_y = @max_y + @move_unit_per_frame
     when :left
       @min_x = @min_x - @move_unit_per_frame
       @max_x = @max_x - @move_unit_per_frame
