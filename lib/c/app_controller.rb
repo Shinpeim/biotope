@@ -1,4 +1,6 @@
 require "opengl";
+require "m/stage"
+require "v/stage"
 
 WINDOW_WIDTH  = 640
 WINDOW_HEIGHT = 400
@@ -6,6 +8,9 @@ class AppController
 
   def display
     Gl.glClear(GL_COLOR_BUFFER_BIT)
+
+    @stage[:view].draw
+
     Gl.glFlush
   end
 
@@ -14,6 +19,12 @@ class AppController
   end
 
   def initialize
+    stage_model = Stage.new(WINDOW_WIDTH, WINDOW_HEIGHT)
+    @stage = {
+      :model => stage_model,
+      :view => StageView.new(stage_model),
+    }
+
     Glut.glutInitWindowPosition(100, 100)
     Glut.glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT)
     Glut.glutInit
