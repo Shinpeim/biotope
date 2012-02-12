@@ -6,14 +6,14 @@ require "v/grass"
 require "m/herbivore"
 require "v/herbivore"
 
-WINDOW_WIDTH  = 640
-WINDOW_HEIGHT = 400
+WINDOW_WIDTH  = 800
+WINDOW_HEIGHT = 600
 
 UNIT_WIDTH  = 8
 UNIT_HEIGHT = 8
 
-GRASS_NUM = 50
-HERBIVORE_NUM = 20
+GRASS_NUM = 80
+HERBIVORE_NUM = 40
 
 DIRECTIONS = [:top, :right, :down, :left]
 

@@ -10,7 +10,7 @@ class HerbivoreView
 
   private
   def color
-    return 0.0, 0.0, 0.0
+    return 1.0, 1.0, 0.0
   end
 
   attr_reader :model
