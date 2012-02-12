@@ -10,4 +10,10 @@ class Stage
     @max_y = window_height - wall_width
   end
 
+  def include?(param)
+     @min_x < param[:min][:x] &&
+     @min_y < param[:min][:y] &&
+     @max_x > param[:max][:x] &&
+     @max_y > param[:max][:y]
+  end
 end
