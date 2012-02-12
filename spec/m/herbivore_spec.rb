@@ -120,7 +120,13 @@ describe Herbivore do
         (120 / @move_unit_per_frame).times do
           @herbivore.move
         end
-      }.should change(@herbivore, :max_y)
+      }.should change(@herbivore, :max_x)
+
+      lambda {
+        (120 / @move_unit_per_frame).times do
+          @herbivore.move
+        end
+      }.should_not change(@herbivore, :max_x).by(-140)
     end
   end
 
