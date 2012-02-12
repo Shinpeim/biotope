@@ -2,10 +2,10 @@
 root = File.join(File.dirname(__FILE__), "..", "..")
 $LOAD_PATH.unshift File.join(root, 'lib')
 
+require File.join(File.dirname(__FILE__), "..", "spec_helper")
 require "c/app_controller"
 require "m/stage"
 require "m/herbivore"
-require "rspec"
 
 describe Herbivore do
   before do

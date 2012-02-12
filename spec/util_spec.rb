@@ -3,7 +3,6 @@ root = File.join(File.dirname(__FILE__), "..")
 $LOAD_PATH.unshift File.join(root, 'lib')
 
 require "util"
-require "rspec"
 
 describe Util do
 
