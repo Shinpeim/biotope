@@ -38,11 +38,11 @@ describe Grass do
     end
 
     it "max_x が20 + WIDTHなこと" do
-      @grass.max_x.should == 20 + UNIT_WIDTH
+      @grass.max_x.should == 20 + Grass::WIDTH
     end
 
     it "max_y が30 + HEIGHTなこと" do
-      @grass.max_y.should == 30 + UNIT_HEIGHT
+      @grass.max_y.should == 30 + Grass::HEIGHT
     end
 
     it "動かないこと" do
@@ -52,6 +52,13 @@ describe Grass do
       after_point = {min: {x: @grass.min_x, y: @grass.min_y},
                      max: {x: @grass.max_x, y: @grass.max_y} }
       before_point.should == after_point
+    end
+
+    it "死なないこと" do
+      @grass.life_point.times do
+        @grass.move
+      end
+      @grass.should_not be_dead
     end
 
   end

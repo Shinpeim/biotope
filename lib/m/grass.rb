@@ -1,22 +1,14 @@
+# -*- coding: utf-8 -*-
 require "m/living_thing.rb"
 class Grass < LivingThing
 
-  def width
-    UNIT_WIDTH
-  end
-
-  def height
-    UNIT_HEIGHT
-  end
-
-  def initial_nutriment
-    INITIAL_NUTRIMENT
-  end
-
-  def initial_life_point
-    1
+  def move
+    #植物は動かない
   end
 
   INITIAL_NUTRIMENT = 10
+  INITIAL_LIFE_POINT= 1
+  WIDTH = 8
+  HEIGHT = 8
 end
 

@@ -9,9 +9,6 @@ require "v/herbivore"
 WINDOW_WIDTH  = 800
 WINDOW_HEIGHT = 600
 
-UNIT_WIDTH  = 8
-UNIT_HEIGHT = 8
-
 GRASS_NUM = 80
 HERBIVORE_NUM = 40
 
@@ -38,6 +35,9 @@ class AppController
   def update(param)
     @living_things.each do |thing|
       thing[:model].move
+    end
+    @living_things.reject! do |thing|
+      thing[:model].dead?
     end
 
     Glut.glutPostRedisplay
@@ -73,10 +73,10 @@ class AppController
   private
   def init_living_things(stage_model)
     living_things = []
-    possible_x = {min: (stage_model.min_x + 1), max: (stage_model.max_x - UNIT_WIDTH  - 1)}
-    possible_y = {min: (stage_model.min_y + 1), max: (stage_model.max_y - UNIT_HEIGHT - 1)}
 
     GRASS_NUM.times do
+      possible_x = {min: (stage_model.min_x + 1), max: (stage_model.max_x - Grass::WIDTH  - 1)}
+      possible_y = {min: (stage_model.min_y + 1), max: (stage_model.max_y - Grass::HEIGHT - 1)}
       x = rand(possible_x[:max] - possible_x[:min]) + possible_x[:min]
       y = rand(possible_y[:max] - possible_y[:min]) + possible_y[:min]
       model =  Grass.new(stage_model, {x: x, y: y}, 0)
@@ -87,8 +87,8 @@ class AppController
     end
 
     HERBIVORE_NUM.times do
-      x = rand(possible_x[:max] - possible_x[:min]) + possible_x[:min]
-      y = rand(possible_y[:max] - possible_y[:min]) + possible_y[:min]
+      possible_x = {min: (stage_model.min_x + 1), max: (stage_model.max_x - Herbivore::WIDTH  - 1)}
+      possible_y = {min: (stage_model.min_y + 1), max: (stage_model.max_y - Herbivore::HEIGHT - 1)}
       model =  Herbivore.new(stage_model, {x: x, y: y}, 1)
       living_things.push ({
         :model => model,

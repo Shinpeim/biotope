@@ -1,26 +1,19 @@
 class LivingThing
 
-  private
-
-  [:width, :height, :initial_nutriment, :initial_life_point].each do |meth|
-    define_method meth do
-      raise "method #{meth.to_s} must be define in concrete class"
-    end
-  end
-
   public
-
-  attr_reader :nutriment, :min_x, :min_y, :max_x, :max_y, :direction, :life_point
+  attr_reader :width, :height, :nutriment, :min_x, :min_y, :max_x, :max_y, :direction, :life_point
 
   def initialize(stage, position, move_unit_per_frame)
     @stage = stage
 
     @min_x = position[:x]
     @min_y = position[:y]
-    @max_x = position[:x] + width
-    @max_y = position[:y] + height
-    @nutriment = initial_nutriment
-    @life_point = initial_life_point
+    @max_x = position[:x] + self.class::WIDTH
+    @max_y = position[:y] + self.class::HEIGHT
+    @nutriment = self.class::INITIAL_NUTRIMENT
+    @life_point = self.class::INITIAL_LIFE_POINT
+    @width = self.class::WIDTH
+    @height = self.class::HEIGHT
 
     @direction = DIRECTIONS[rand(DIRECTIONS.size)]
 

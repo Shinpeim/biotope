@@ -39,11 +39,11 @@ describe Herbivore do
     end
 
     it "幅が単位幅であること" do
-      @herbivore.width.should == UNIT_WIDTH
+      @herbivore.width.should == Herbivore::WIDTH
     end
 
     it "高さが単位高さであること" do
-      @herbivore.height.should == UNIT_HEIGHT
+      @herbivore.height.should == Herbivore::HEIGHT
     end
 
   end
@@ -62,11 +62,11 @@ describe Herbivore do
     end
 
     it "max_x が20 + WIDTHなこと" do
-      @herbivore.max_x.should == 20 + UNIT_WIDTH
+      @herbivore.max_x.should == 20 + Herbivore::WIDTH
     end
 
     it "max_y が30 + HEIGHTなこと" do
-      @herbivore.max_y.should == 30 + UNIT_HEIGHT
+      @herbivore.max_y.should == 30 + Herbivore::HEIGHT
     end
   end
 
@@ -170,8 +170,8 @@ describe Herbivore do
             to_start = {
               :top =>  {x: nil, y: @stage.min_y + @move_unit_per_frame},
               :left => {x: @stage.min_x + @move_unit_per_frame, y: nil},
-              :bottom =>  {x: nil, y: @stage.max_y - UNIT_HEIGHT - @move_unit_per_frame},
-              :right => {x: @stage.max_x - UNIT_HEIGHT -  @move_unit_per_frame, y: nil},
+              :bottom =>  {x: nil, y: @stage.max_y - Herbivore::HEIGHT - @move_unit_per_frame},
+              :right => {x: @stage.max_x - Herbivore::HEIGHT -  @move_unit_per_frame, y: nil},
             }
             to_start.each do |d,point|
               if walls.include? d
