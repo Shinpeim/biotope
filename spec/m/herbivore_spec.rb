@@ -74,7 +74,7 @@ describe Herbivore do
         @herbivore.move
         after_point = {min: {x: @herbivore.min_x, y: @herbivore.min_y},
           max: {x: @herbivore.max_x, y: @herbivore.max_y} }
-        if @herbivore.direction == :top
+        if @herbivore.direction == :up
           before_point[:min][:x].should == after_point[:min][:x]
           before_point[:max][:x].should == after_point[:max][:x]
           before_point[:min][:y].should == after_point[:min][:y] + @move_unit_per_frame
@@ -132,12 +132,12 @@ describe Herbivore do
 
   test_cases = [
     {
-      :direction => :top,
-      :walls_to_test =>  [ [:top], [:top, :left], [:top, :right] ],
+      :direction => :up,
+      :walls_to_test =>  [ [:up], [:up, :left], [:up, :right] ],
     },
     {
       :direction => :left,
-      :walls_to_test =>  [ [:left], [:top, :left], [:down, :left] ],
+      :walls_to_test =>  [ [:left], [:up, :left], [:down, :left] ],
     },
     {
       :direction => :down,
@@ -145,7 +145,7 @@ describe Herbivore do
     },
     {
       :direction => :right,
-      :walls_to_test =>  [ [:right], [:top, :right], [:down, :right] ],
+      :walls_to_test =>  [ [:right], [:up, :right], [:down, :right] ],
     },
   ];
   test_cases.each do |test_case|
@@ -154,7 +154,7 @@ describe Herbivore do
       test_case[:walls_to_test].each do |walls|
         describe "#{walls.map{|item|item.to_s}.join("と")}に壁があったら" do
           before do
-            if walls.include? :top
+            if walls.include? :up
               y = @stage.min_y + @move_unit_per_frame
             end
             if walls.include? :left
@@ -199,7 +199,7 @@ describe Herbivore do
                 before_point[:max][:x].should == after_point[:max][:x] - @move_unit_per_frame
                 before_point[:min][:y].should == after_point[:min][:y]
                 before_point[:max][:y].should == after_point[:max][:y]
-              when :top
+              when :up
                 before_point[:min][:x].should == after_point[:min][:x]
                 before_point[:max][:x].should == after_point[:max][:x]
                 before_point[:min][:y].should == after_point[:min][:y] + @move_unit_per_frame
