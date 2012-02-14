@@ -36,10 +36,10 @@ class LivingThing
 
   def move
     case @direction
-    when :up
+    when :top
       @min_y = @min_y - @move_unit_per_frame
       @max_y = @max_y - @move_unit_per_frame
-    when :down
+    when :bottom
       @min_y = @min_y + @move_unit_per_frame
       @max_y = @max_y + @move_unit_per_frame
     when :left
@@ -63,10 +63,10 @@ class LivingThing
   private
   def turn
     case @direction
-    when :up
+    when :top
       @min_y = @min_y + @move_unit_per_frame
       @max_y = @max_y + @move_unit_per_frame
-    when :down
+    when :bottom
       @min_y = @min_y - @move_unit_per_frame
       @max_y = @max_y - @move_unit_per_frame
     when :left
