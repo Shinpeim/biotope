@@ -10,20 +10,19 @@ RubyとOpenGLで書かれた、生態系シミュレータです。
 
 ### green rectangle / 緑の四角
 
-a green rectangle represent some grass. grass can't move, of course.
+a green rectangle represent grass. grass can't move, of course.
 
 緑の四角は草です。もちろんうごきません。
 
 ### yellow rectangle / 黄色の四角
 
-a yellow rectangle represent a herbivore. herbivore can move. it move randomly.
+a yellow rectangle represent a herbivore. herbivore can move. it move randomly. get hungly to be dead. once dead, it turn into some grass
 
-黄色の四角は草食動物です。ランダムウォークします。
+黄色の四角は草食動物です。ランダムウォークします。おなかが減ると死にます。死ぬと草になります。
 
 
 ## TODO / 今後の予定
 
-* herbivores must be die and then change into some grasses / 草食動物に死を用意する。死んだら草になる
 * herbivores must eat grass. / 草食動物は草を捕食する。
 * herbivores will breed. / 草食動物は繁殖する。
 * create carnivores / 肉食動物作る
