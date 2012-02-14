@@ -9,9 +9,14 @@ class Grass < LivingThing
     UNIT_HEIGHT
   end
 
-  def nutriment
-    10
+  def initial_nutriment
+    INITIAL_NUTRIMENT
   end
 
+  def initial_life_point
+    1
+  end
+
+  INITIAL_NUTRIMENT = 10
 end
 

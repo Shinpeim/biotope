@@ -9,8 +9,14 @@ class Herbivore < LivingThing
     UNIT_HEIGHT
   end
 
-  def nutriment
-    10 * 4
+  def initial_nutriment
+    INITIAL_NUTRIMENT
   end
 
+  def initial_life_point
+    INITIAL_LIFE_POINT
+  end
+
+  INITIAL_NUTRIMENT = 10 * 4
+  INITIAL_LIFE_POINT = 500
 end
