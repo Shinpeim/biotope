@@ -15,7 +15,7 @@ UNIT_HEIGHT = 8
 GRASS_NUM = 80
 HERBIVORE_NUM = 40
 
-DIRECTIONS = [:up, :right, :down, :left]
+DIRECTIONS = [:top, :right, :bottom, :left]
 
 class AppController
 
