@@ -13,20 +13,20 @@ describe Grass do
   end
 
   it "stageに入ってなかったらエラーになること" do
-    lambda{Grass.new(@stage, {x: 5, y: 5}, 0)}.should raise_error
+    lambda{Grass.new(@stage, {x: 5, y: 5})}.should raise_error
   end
 
   it "stageに入っていれば問題なくnewできること" do
-    lambda{Grass.new(@stage, {x: 11, y: 11}, 0)}.should_not raise_error
+    lambda{Grass.new(@stage, {x: 11, y: 11})}.should_not raise_error
   end
 
   it "養分が10であること" do
-    Grass.new(@stage, {x: 11, y: 11}, 0).nutriment.should == 10
+    Grass.new(@stage, {x: 11, y: 11}).nutriment.should == 10
   end
 
   describe "xに20, yに30を与えた場合" do
     before do
-      @grass = Grass.new(@stage, {x: 20, y: 30}, 0)
+      @grass = Grass.new(@stage, {x: 20, y: 30})
     end
 
     it "min_x が20なこと" do

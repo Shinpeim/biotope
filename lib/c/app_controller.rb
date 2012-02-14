@@ -33,12 +33,21 @@ class AppController
   end
 
   def update(param)
+    new_living_things = []
+
     @living_things.each do |thing|
       thing[:model].move
+
+      if thing[:model].dead?
+        grasses = thing[:model].to_grasses
+        grasses.each do |grass|
+          new_living_things.push(model: grass, view: GrassView.new(grass))
+        end
+        @living_things.delete(thing)
+      end
     end
-    @living_things.reject! do |thing|
-      thing[:model].dead?
-    end
+
+    @living_things.concat new_living_things
 
     Glut.glutPostRedisplay
     Glut.glutTimerFunc(16,method(:update).to_proc,nil)
@@ -79,21 +88,17 @@ class AppController
       possible_y = {min: (stage_model.min_y + 1), max: (stage_model.max_y - Grass::HEIGHT - 1)}
       x = rand(possible_x[:max] - possible_x[:min]) + possible_x[:min]
       y = rand(possible_y[:max] - possible_y[:min]) + possible_y[:min]
-      model =  Grass.new(stage_model, {x: x, y: y}, 0)
-      living_things.push ({
-        :model => model,
-        :view => GrassView.new(model),
-      })
+      model =  Grass.new(stage_model, {x: x, y: y})
+      living_things.push ({:model => model, :view => GrassView.new(model)})
     end
 
     HERBIVORE_NUM.times do
       possible_x = {min: (stage_model.min_x + 1), max: (stage_model.max_x - Herbivore::WIDTH  - 1)}
       possible_y = {min: (stage_model.min_y + 1), max: (stage_model.max_y - Herbivore::HEIGHT - 1)}
-      model =  Herbivore.new(stage_model, {x: x, y: y}, 1)
-      living_things.push ({
-        :model => model,
-        :view => HerbivoreView.new(model),
-      })
+      x = rand(possible_x[:max] - possible_x[:min]) + possible_x[:min]
+      y = rand(possible_y[:max] - possible_y[:min]) + possible_y[:min]
+      model =  Herbivore.new(stage_model, {x: x, y: y})
+      living_things.push ({:model => model, :view => HerbivoreView.new(model)})
     end
 
     return living_things

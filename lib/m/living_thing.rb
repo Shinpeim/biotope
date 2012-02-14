@@ -3,21 +3,21 @@ class LivingThing
   public
   attr_reader :width, :height, :nutriment, :min_x, :min_y, :max_x, :max_y, :direction, :life_point
 
-  def initialize(stage, position, move_unit_per_frame)
+  def initialize(stage, position, nutriment = nil)
     @stage = stage
 
     @min_x = position[:x]
     @min_y = position[:y]
     @max_x = position[:x] + self.class::WIDTH
     @max_y = position[:y] + self.class::HEIGHT
-    @nutriment = self.class::INITIAL_NUTRIMENT
+    @nutriment = nutriment || self.class::INITIAL_NUTRIMENT
     @life_point = self.class::INITIAL_LIFE_POINT
     @width = self.class::WIDTH
     @height = self.class::HEIGHT
+    @move_unit_per_frame = self.class::MOVE_UNIT_PER_FRAME
 
     @direction = DIRECTIONS[rand(DIRECTIONS.size)]
 
-    @move_unit_per_frame = move_unit_per_frame
     @go_straight_to = 70 + rand(50)
 
     unless @stage.include?(min: {x: @min_x, y: @min_y}, max: {x: @max_x, y: @max_y})
@@ -56,6 +56,37 @@ class LivingThing
 
   def dead?
     @life_point <= 0
+  end
+
+  def to_grasses
+    raise "can't be grasses unless dead" unless dead?
+    grass_num = @nutriment / Grass::INITIAL_NUTRIMENT
+    mod = @nutriment % Grass::INITIAL_NUTRIMENT
+
+    grasses = []
+    grass_num.times do |n|
+      nut = Grass::INITIAL_NUTRIMENT
+      if mod > 0
+        nut += 1
+      end
+
+      delta_x = rand(Grass::WIDTH * (n + 2))
+      delta_y = rand(Grass::HEIGHT * (n + 2))
+      delta_x -= rand(Grass::WIDTH * (n + 1))
+      delta_y -= rand(Grass::HEIGHT * (n + 1))
+      delta_x = - delta_x if rand(2) == 0
+      delta_y = - delta_y if rand(2) == 0
+      position = {x: @min_x + delta_x, y: @min_y + delta_y}
+
+      begin
+        grasses.push Grass.new(@stage,position,nut)
+      rescue
+        redo
+      end
+
+      mod -= 1
+    end
+    return grasses
   end
 
   private

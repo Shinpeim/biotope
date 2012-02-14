@@ -10,20 +10,19 @@ require "m/herbivore"
 describe Herbivore do
   before do
     @stage = Stage.new(WINDOW_WIDTH,WINDOW_HEIGHT)
-    @move_unit_per_frame = 1
     @center_point = {x: ((@stage.min_x + @stage.max_x) / 2), y: ((@stage.min_y + @stage.max_y) / 2)}
   end
 
   # 初期化について
   describe "stageに入っていないとき" do
     it "エラーになること" do
-      lambda{Herbivore.new(@stage, {x: 5, y: 5}, @move_unit_per_frame)}.should raise_error
+      lambda{Herbivore.new(@stage, {x: 5, y: 5})}.should raise_error
     end
   end
 
   describe "初期化時に" do
     before do
-      @herbivore = Herbivore.new(@stage, {x: 11, y: 11}, @move_unit_per_frame)
+      @herbivore = Herbivore.new(@stage, {x: 11, y: 11})
     end
 
     it "初期養分がHerbivore::INITIAL_NUTRIMENTであること" do
@@ -50,7 +49,7 @@ describe Herbivore do
 
   describe "xに20, yに30を与えた場合" do
     before do
-      @herbivore = Herbivore.new(@stage, {x: 20, y: 30}, @move_unit_per_frame)
+      @herbivore = Herbivore.new(@stage, {x: 20, y: 30})
     end
 
     it "min_x が20なこと" do
@@ -75,7 +74,7 @@ describe Herbivore do
     describe direction.to_s + "方向へ進むとき" do
       before do
         begin
-          @herbivore = Herbivore.new(@stage, @center_point, @move_unit_per_frame)
+          @herbivore = Herbivore.new(@stage, @center_point)
         end until @herbivore.direction == direction
       end
 
@@ -88,21 +87,21 @@ describe Herbivore do
         if @herbivore.direction == :top
           before_point[:min][:x].should == after_point[:min][:x]
           before_point[:max][:x].should == after_point[:max][:x]
-          before_point[:min][:y].should == after_point[:min][:y] + @move_unit_per_frame
-          before_point[:max][:y].should == after_point[:max][:y] + @move_unit_per_frame
+          before_point[:min][:y].should == after_point[:min][:y] + Herbivore::MOVE_UNIT_PER_FRAME
+          before_point[:max][:y].should == after_point[:max][:y] + Herbivore::MOVE_UNIT_PER_FRAME
         elsif @herbivore.direction == :bottom
           before_point[:min][:x].should == after_point[:min][:x]
           before_point[:max][:x].should == after_point[:max][:x]
-          before_point[:min][:y].should == after_point[:min][:y] - @move_unit_per_frame
-          before_point[:max][:y].should == after_point[:max][:y] - @move_unit_per_frame
+          before_point[:min][:y].should == after_point[:min][:y] - Herbivore::MOVE_UNIT_PER_FRAME
+          before_point[:max][:y].should == after_point[:max][:y] - Herbivore::MOVE_UNIT_PER_FRAME
         elsif @herbivore.direction == :left
-          before_point[:min][:x].should == after_point[:min][:x] + @move_unit_per_frame
-          before_point[:max][:x].should == after_point[:max][:x] + @move_unit_per_frame
+          before_point[:min][:x].should == after_point[:min][:x] + Herbivore::MOVE_UNIT_PER_FRAME
+          before_point[:max][:x].should == after_point[:max][:x] + Herbivore::MOVE_UNIT_PER_FRAME
           before_point[:min][:y].should == after_point[:min][:y]
           before_point[:max][:y].should == after_point[:max][:y]
         elsif @herbivore.direction == :right
-          before_point[:min][:x].should == after_point[:min][:x] - @move_unit_per_frame
-          before_point[:max][:x].should == after_point[:max][:x] - @move_unit_per_frame
+          before_point[:min][:x].should == after_point[:min][:x] - Herbivore::MOVE_UNIT_PER_FRAME
+          before_point[:max][:x].should == after_point[:max][:x] - Herbivore::MOVE_UNIT_PER_FRAME
           before_point[:min][:y].should == after_point[:min][:y]
           before_point[:max][:y].should == after_point[:max][:y]
         end
@@ -113,13 +112,13 @@ describe Herbivore do
   describe "邪魔するものがないとき" do
     before do
       begin
-        @herbivore = Herbivore.new(@stage, @center_point, @move_unit_per_frame)
+        @herbivore = Herbivore.new(@stage, @center_point)
       end until @herbivore.direction == :left
     end
 
     it "70歩は歩き続けること" do
       lambda {
-        (70 / @move_unit_per_frame).times do
+        (70 / Herbivore::MOVE_UNIT_PER_FRAME).times do
           @herbivore.move
         end
       }.should change(@herbivore, :max_x).by(-70)
@@ -127,13 +126,13 @@ describe Herbivore do
 
     it "120歩以内に曲がること" do
       lambda {
-        (120 / @move_unit_per_frame).times do
+        (120 / Herbivore::MOVE_UNIT_PER_FRAME).times do
           @herbivore.move
         end
       }.should change(@herbivore, :max_x)
 
       lambda {
-        (120 / @move_unit_per_frame).times do
+        (120 / Herbivore::MOVE_UNIT_PER_FRAME).times do
           @herbivore.move
         end
       }.should_not change(@herbivore, :max_x).by(-140)
@@ -168,10 +167,10 @@ describe Herbivore do
             x = @center_point[:x]
             y = @center_point[:y]
             to_start = {
-              :top =>  {x: nil, y: @stage.min_y + @move_unit_per_frame},
-              :left => {x: @stage.min_x + @move_unit_per_frame, y: nil},
-              :bottom =>  {x: nil, y: @stage.max_y - Herbivore::HEIGHT - @move_unit_per_frame},
-              :right => {x: @stage.max_x - Herbivore::HEIGHT -  @move_unit_per_frame, y: nil},
+              :top =>  {x: nil, y: @stage.min_y + Herbivore::MOVE_UNIT_PER_FRAME},
+              :left => {x: @stage.min_x + Herbivore::MOVE_UNIT_PER_FRAME, y: nil},
+              :bottom =>  {x: nil, y: @stage.max_y - Herbivore::HEIGHT - Herbivore::MOVE_UNIT_PER_FRAME},
+              :right => {x: @stage.max_x - Herbivore::HEIGHT -  Herbivore::MOVE_UNIT_PER_FRAME, y: nil},
             }
             to_start.each do |d,point|
               if walls.include? d
@@ -187,7 +186,7 @@ describe Herbivore do
           it "#{will_turn_to.map{|i|i.to_s}.join('か')}にのみターンしうること" do
             50.times do
               begin
-                @herbivore = Herbivore.new(@stage, @start_point, @move_unit_per_frame)
+                @herbivore = Herbivore.new(@stage, @start_point)
               end until @herbivore.direction == test_case[:direction]
               @herbivore.move
               turned_to.push @herbivore.direction
@@ -205,21 +204,47 @@ describe Herbivore do
   # 死活について
   describe "死活に関して" do
     before do
-      @herbivore = Herbivore.new(@stage, @center_point, @move_unit_per_frame)
+      @herbivore = Herbivore.new(@stage, @center_point, 82)
     end
 
-    it "1歩動くとlife_pointが1減ること" do
-      lambda{@herbivore.move}.should change(@herbivore,:life_point).by(-1)
-    end
-
-    it "life_pointが0になると死に、動けなくなること" do
-      (Herbivore::INITIAL_LIFE_POINT).times do
-        @herbivore.should_not be_dead
-        @herbivore.move
+    describe "生きてるとき" do
+      it "1歩動くとlife_pointが1減ること" do
+        lambda{@herbivore.move}.should change(@herbivore,:life_point).by(-1)
       end
 
-      @herbivore.should be_dead
-      lambda{@herbivore.move}.should raise_error
+      it "life_pointが0になると死ぬこと" do
+        (Herbivore::INITIAL_LIFE_POINT).times do
+          @herbivore.should_not be_dead
+          @herbivore.move
+        end
+        @herbivore.should be_dead
+      end
+
+      it "草になれないこと" do
+        lambda{@herbivore.to_grasses}.should raise_error
+      end
+    end
+
+    describe "死んだとき" do
+      before do
+        (Herbivore::INITIAL_LIFE_POINT).times do
+          @herbivore.move
+        end
+      end
+
+      it "動けないこと" do
+        lambda{@herbivore.move}.should raise_error
+      end
+
+      it "草になれること" do
+        grasses = @herbivore.to_grasses
+        grasses.all?{|item|item.class == Grass}.should be_true
+      end
+
+      it "草になった養分が自分の養分と等しいこと" do
+        grasses = @herbivore.to_grasses
+        grasses.map{|i| i.nutriment}.inject{|a,b| a + b}.should == @herbivore.nutriment
+      end
     end
   end
 
