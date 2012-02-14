@@ -130,107 +130,93 @@ describe Herbivore do
     end
   end
 
-  describe "上に向かっているとき" do
-    before do
-      @direction = :top
-    end
+  test_cases = [
+    {
+      :direction => :top,
+      :walls_to_test =>  [ [:top], [:top, :left], [:top, :right] ],
+    },
+    {
+      :direction => :left,
+      :walls_to_test =>  [ [:left], [:top, :left], [:down, :left] ],
+    },
+    {
+      :direction => :down,
+      :walls_to_test =>  [ [:down], [:down, :left], [:down, :right] ],
+    },
+    {
+      :direction => :right,
+      :walls_to_test =>  [ [:right], [:top, :right], [:down, :right] ],
+    },
+  ];
+  test_cases.each do |test_case|
+    describe "#{test_case[:direction].to_s}に向かっているとき" do
 
-    describe "上にも左にも余裕がなかったら" do
-      before do
-        @start_point = {x: @stage.min_x + @move_unit_per_frame, y: @stage.min_y + @move_unit_per_frame}
-        begin
-          @herbivore = Herbivore.new(@stage, @start_point, @move_unit_per_frame)
-        end until @herbivore.direction == @direction
-      end
+      test_case[:walls_to_test].each do |walls|
+        describe "#{walls.map{|item|item.to_s}.join("と")}に壁があったら" do
+          before do
+            if walls.include? :top
+              y = @stage.min_y + @move_unit_per_frame
+            end
+            if walls.include? :left
+              x = @stage.min_x + @move_unit_per_frame
+            end
+            if walls.include? :right
+              x = @stage.max_x - @move_unit_per_frame - UNIT_WIDTH
+            end
+            if walls.include? :down
+              y = @stage.max_y - @move_unit_per_frame - UNIT_WIDTH
+            end
+            x ||= (@stage.min_x + @stage.max_x) / 2
+            y ||= (@stage.min_y + @stage.max_y) / 2
 
-      it "右か下にターンすること" do
-        before_point = {min: {x: @herbivore.min_x, y: @herbivore.min_y},
-          max: {x: @herbivore.max_x, y: @herbivore.max_y} }
-        @herbivore.move
-        after_point = {min: {x: @herbivore.min_x, y: @herbivore.min_y},
-          max: {x: @herbivore.max_x, y: @herbivore.max_y} }
-        [:down,:right].should be_include(@herbivore.direction)
-        case @herbivore.direction
-        when :down
-          before_point[:min][:x].should == after_point[:min][:x]
-          before_point[:max][:x].should == after_point[:max][:x]
-          before_point[:min][:y].should == after_point[:min][:y] - @move_unit_per_frame
-          before_point[:max][:y].should == after_point[:max][:y] - @move_unit_per_frame
-        when :right
-          before_point[:min][:x].should == after_point[:min][:x] - @move_unit_per_frame
-          before_point[:max][:x].should == after_point[:max][:x] - @move_unit_per_frame
-          before_point[:min][:y].should == after_point[:min][:y]
-          before_point[:max][:y].should == after_point[:max][:y]
+            @start_point = {x: x, y: y}
+          end
+
+          will_turn_to = DIRECTIONS.reject{|d| walls.include? d}
+          it "#{will_turn_to.map{|item|item.to_s}.join('か')}にランダムにターンすること" do
+            turned_to = {}
+            50.times do
+              begin
+                @herbivore = Herbivore.new(@stage, @start_point, @move_unit_per_frame)
+              end until @herbivore.direction == test_case[:direction]
+              before_point = {min: {x: @herbivore.min_x, y: @herbivore.min_y},
+                              max: {x: @herbivore.max_x, y: @herbivore.max_y} }
+              @herbivore.move
+              after_point = {min: {x: @herbivore.min_x, y: @herbivore.min_y},
+                             max: {x: @herbivore.max_x, y: @herbivore.max_y} }
+
+              will_turn_to.should be_include(@herbivore.direction)
+              turned_to[@herbivore.direction] = true
+
+              case @herbivore.direction
+              when :down
+                before_point[:min][:x].should == after_point[:min][:x]
+                before_point[:max][:x].should == after_point[:max][:x]
+                before_point[:min][:y].should == after_point[:min][:y] - @move_unit_per_frame
+                before_point[:max][:y].should == after_point[:max][:y] - @move_unit_per_frame
+              when :right
+                before_point[:min][:x].should == after_point[:min][:x] - @move_unit_per_frame
+                before_point[:max][:x].should == after_point[:max][:x] - @move_unit_per_frame
+                before_point[:min][:y].should == after_point[:min][:y]
+                before_point[:max][:y].should == after_point[:max][:y]
+              when :top
+                before_point[:min][:x].should == after_point[:min][:x]
+                before_point[:max][:x].should == after_point[:max][:x]
+                before_point[:min][:y].should == after_point[:min][:y] + @move_unit_per_frame
+                before_point[:max][:y].should == after_point[:max][:y] + @move_unit_per_frame
+              when :left
+                before_point[:min][:x].should == after_point[:min][:x] + @move_unit_per_frame
+                before_point[:max][:x].should == after_point[:max][:x] + @move_unit_per_frame
+                before_point[:min][:y].should == after_point[:min][:y]
+                before_point[:max][:y].should == after_point[:max][:y]
+              end
+            end
+            will_turn_to.each do |d|
+              turned_to[d].should be_true
+            end
+          end
         end
       end
     end
-
-    describe "上にも右にも余裕がなかったら" do
-      before do
-        @start_point = {x: @stage.max_x - @move_unit_per_frame - UNIT_WIDTH,
-                        y: @stage.min_y + @move_unit_per_frame }
-        begin
-          @herbivore = Herbivore.new(@stage, @start_point, @move_unit_per_frame)
-        end until @herbivore.direction == @direction
-      end
-
-      it "左か下にターンすること" do
-        before_point = {min: {x: @herbivore.min_x, y: @herbivore.min_y},
-          max: {x: @herbivore.max_x, y: @herbivore.max_y} }
-        @herbivore.move
-        after_point = {min: {x: @herbivore.min_x, y: @herbivore.min_y},
-          max: {x: @herbivore.max_x, y: @herbivore.max_y} }
-        [:down,:left].should be_include(@herbivore.direction)
-        case @herbivore.direction
-        when :down
-          before_point[:min][:x].should == after_point[:min][:x]
-          before_point[:max][:x].should == after_point[:max][:x]
-          before_point[:min][:y].should == after_point[:min][:y] - @move_unit_per_frame
-          before_point[:max][:y].should == after_point[:max][:y] - @move_unit_per_frame
-        when :left
-          before_point[:min][:x].should == after_point[:min][:x] + @move_unit_per_frame
-          before_point[:max][:x].should == after_point[:max][:x] + @move_unit_per_frame
-          before_point[:min][:y].should == after_point[:min][:y]
-          before_point[:max][:y].should == after_point[:max][:y]
-        end
-      end
-    end
-
-    describe "左右には余裕があったら" do
-      before do
-        @start_point = {x: @stage.max_x - @move_unit_per_frame - UNIT_WIDTH,
-                        y: @stage.min_y + @move_unit_per_frame }
-        begin
-          @herbivore = Herbivore.new(@stage, @start_point, @move_unit_per_frame)
-        end until @herbivore.direction == @direction
-      end
-
-      it "右か左か下にターンすること" do
-        before_point = {min: {x: @herbivore.min_x, y: @herbivore.min_y},
-          max: {x: @herbivore.max_x, y: @herbivore.max_y} }
-        @herbivore.move
-        after_point = {min: {x: @herbivore.min_x, y: @herbivore.min_y},
-          max: {x: @herbivore.max_x, y: @herbivore.max_y} }
-        [:down, :left, :right].should be_include(@herbivore.direction)
-        case @herbivore.direction
-        when :down
-          before_point[:min][:x].should == after_point[:min][:x]
-          before_point[:max][:x].should == after_point[:max][:x]
-          before_point[:min][:y].should == after_point[:min][:y] - @move_unit_per_frame
-          before_point[:max][:y].should == after_point[:max][:y] - @move_unit_per_frame
-        when :left
-          before_point[:min][:x].should == after_point[:min][:x] + @move_unit_per_frame
-          before_point[:max][:x].should == after_point[:max][:x] + @move_unit_per_frame
-          before_point[:min][:y].should == after_point[:min][:y]
-          before_point[:max][:y].should == after_point[:max][:y]
-        when :right
-          before_point[:min][:x].should == after_point[:min][:x] - @move_unit_per_frame
-          before_point[:max][:x].should == after_point[:max][:x] - @move_unit_per_frame
-          before_point[:min][:y].should == after_point[:min][:y]
-          before_point[:max][:y].should == after_point[:max][:y]
-        end
-      end
-    end
-
   end
 end
