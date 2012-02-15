@@ -1,5 +1,13 @@
-require "m/living_thing.rb"
+require "m/living_thing"
+require "m/grass"
 class Herbivore < LivingThing
+
+  def eat(target)
+    return false if target.class != Grass
+
+    @life_point = INITIAL_LIFE_POINT
+    @nutriment += target.nutriment
+  end
 
   WIDTH = 8
   HEIGHT = 8

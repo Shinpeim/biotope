@@ -1,7 +1,13 @@
 class LivingThing
 
-  public
   attr_reader :width, :height, :nutriment, :min_x, :min_y, :max_x, :max_y, :direction, :life_point
+
+  abstract_methods = [:eat]
+  abstract_methods.each do |m|
+    define_method m do
+      raise "abstract method"
+    end
+  end
 
   def initialize(stage, position, nutriment = nil)
     @stage = stage
@@ -87,6 +93,13 @@ class LivingThing
       mod -= 1
     end
     return grasses
+  end
+
+  def conflict?(target)
+    (@min_x <= target.max_x) &&
+      (@max_x >= target.min_x) &&
+      (@min_y <= target.max_y) &&
+      (@max_y >= target.min_y)
   end
 
   private

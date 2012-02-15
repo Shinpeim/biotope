@@ -10,6 +10,10 @@ class Grass < LivingThing
     false #植物は死なない
   end
 
+  def eat(target)
+    false #植物は食べない
+  end
+
   INITIAL_NUTRIMENT = 10
   INITIAL_LIFE_POINT= 1
   WIDTH = 8

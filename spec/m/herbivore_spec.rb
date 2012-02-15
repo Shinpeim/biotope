@@ -6,6 +6,7 @@ require File.join(File.dirname(__FILE__), "..", "spec_helper")
 require "c/app_controller"
 require "m/stage"
 require "m/herbivore"
+require "m/grass"
 
 describe Herbivore do
   before do
@@ -245,6 +246,34 @@ describe Herbivore do
         grasses = @herbivore.to_grasses
         grasses.map{|i| i.nutriment}.inject{|a,b| a + b}.should == @herbivore.nutriment
       end
+    end
+  end
+
+  #捕食について
+  describe "捕食について" do
+    before do
+      @herbivore = Herbivore.new(@stage, @center_point)
+      @herbivore_to_be_eaten = Herbivore.new(@stage, @center_point)
+      @grass_to_be_eaten = Grass.new(@stage, @center_point)
+
+      [@herbivore, @herbivore_to_be_eaten].each do |herbivore|
+        (herbivore.life_point / 2).times do
+          herbivore.move
+        end
+      end
+    end
+
+    it "草食動物は食べない" do
+      @herbivore.eat(@herbivore_to_be_eaten).should be_false
+    end
+
+    it "草は食べる" do
+      @herbivore.eat(@grass_to_be_eaten).should be_true
+    end
+
+    it "草を食べるとlifeが回復する！" do
+      lambda{@herbivore.eat(@grass_to_be_eaten)}.
+        should change(@herbivore,:life_point).to(Herbivore::INITIAL_LIFE_POINT)
     end
   end
 
