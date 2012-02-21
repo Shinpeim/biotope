@@ -6,6 +6,8 @@ require "m/grass"
 require "v/grass"
 require "m/herbivore"
 require "v/herbivore"
+require "m/carnivore"
+require "v/carnivore"
 require "m/quad_tree_space"
 
 WINDOW_WIDTH  = 600
@@ -13,6 +15,7 @@ WINDOW_HEIGHT = 400
 
 GRASS_NUM = 60
 HERBIVORE_NUM = 20
+CARNIVORE_NUM = 5
 
 DIRECTIONS = [:top, :right, :bottom, :left]
 
@@ -56,11 +59,19 @@ class AppController
     #衝突判定
     conflicted = []
     herbivores = @living_things.select{|t| t[:model].class == Herbivore}
+    carnivores = @living_things.select{|t| t[:model].class == Carnivore}
     grasses    = @living_things.select{|t| t[:model].class == Grass}
     herbivores.each do |h|
       grasses.each do |g|
         if h[:model].conflict?(g[:model])
           conflicted.push [h[:model], g[:model]]
+        end
+      end
+    end
+    carnivores.each do |c|
+      herbivores.each do |h|
+        if c[:model].conflict?(h[:model])
+          conflicted.push [c[:model], h[:model]]
         end
       end
     end
@@ -133,7 +144,6 @@ class AppController
 
   private
   def init_living_things(stage_model)
-    #living_things = {:grasses => [], :herbivores => []}
     living_things = []
 
     GRASS_NUM.times do
@@ -152,6 +162,15 @@ class AppController
       y = rand(possible_y[:max] - possible_y[:min]) + possible_y[:min]
       model =  Herbivore.new(stage_model, {x: x, y: y})
       living_things.push ({:model => model, :view => HerbivoreView.new(model), :in => {}})
+    end
+
+    CARNIVORE_NUM.times do
+      possible_x = {min: (stage_model.min_x + 1), max: (stage_model.max_x - Carnivore::WIDTH  - 1)}
+      possible_y = {min: (stage_model.min_y + 1), max: (stage_model.max_y - Carnivore::HEIGHT - 1)}
+      x = rand(possible_x[:max] - possible_x[:min]) + possible_x[:min]
+      y = rand(possible_y[:max] - possible_y[:min]) + possible_y[:min]
+      model =  Carnivore.new(stage_model, {x: x, y: y})
+      living_things.push ({:model => model, :view => CarnivoreView.new(model), :in => {}})
     end
 
     return living_things
