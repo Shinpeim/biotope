@@ -20,11 +20,15 @@ a yellow rectangle represent a herbivore. herbivore can move. it move randomly. 
 
 黄色の四角は草食動物です。ランダムウォークします。おなかが減ると死にます。死ぬと草になります。
 
+### red rectangle / 赤の四角
+
+a red rectangle represent a canivore. carnivore can move. it move randomly. get hungly to be dead. once dead, it turn into some grass
+
+赤の四角は肉食動物です。ランダムウォークします。おなかが減ると死にます。死ぬと草になります。
+
 
 ## TODO / 今後の予定
 
-* herbivores will breed. / 草食動物は繁殖する。
-* create carnivores / 肉食動物作る
 * map textures to living things / 生き物にテクスチャ貼る
 
 ## HOW TO INSTALL
