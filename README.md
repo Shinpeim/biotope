@@ -23,7 +23,6 @@ a yellow rectangle represent a herbivore. herbivore can move. it move randomly. 
 
 ## TODO / 今後の予定
 
-* herbivores must eat grass. / 草食動物は草を捕食する。
 * herbivores will breed. / 草食動物は繁殖する。
 * create carnivores / 肉食動物作る
 * map textures to living things / 生き物にテクスチャ貼る

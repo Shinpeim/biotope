@@ -8,11 +8,11 @@ require "m/herbivore"
 require "v/herbivore"
 require "m/quad_tree_space"
 
-WINDOW_WIDTH  = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH  = 600
+WINDOW_HEIGHT = 400
 
-GRASS_NUM = 80
-HERBIVORE_NUM = 40
+GRASS_NUM = 60
+HERBIVORE_NUM = 20
 
 DIRECTIONS = [:top, :right, :bottom, :left]
 
@@ -55,13 +55,12 @@ class AppController
 
     #衝突判定
     conflicted = []
-    @living_things.each do |thing|
-      @quad_tree_space.get_objects_in(thing[:in][:depth], thing[:in][:morton]).each do |target_model|
-        next if target_model.class == thing[:model].class
-        next if conflicted.include? [thing[:model], target_model].sort{|a, b| a.object_id <=> b.object_id}
-
-        if thing[:model].conflict?(target_model)
-          conflicted.push [thing[:model], target_model].sort{|a, b| a.object_id <=> b.object_id}
+    herbivores = @living_things.select{|t| t[:model].class == Herbivore}
+    grasses    = @living_things.select{|t| t[:model].class == Grass}
+    herbivores.each do |h|
+      grasses.each do |g|
+        if h[:model].conflict?(g[:model])
+          conflicted.push [h[:model], g[:model]]
         end
       end
     end
@@ -69,14 +68,10 @@ class AppController
     #捕食
     deleted = {}
     conflicted.each do |pair|
-      #next if deleted[pair[0]] || deleted[pair[1]]
+      next if deleted[pair[0]] || deleted[pair[1]]
       ret = pair[0].eat(pair[1])
       @living_things.delete_if{|t| t[:model].eql? pair[1]} if ret
       deleted[pair[1]] = true if ret
-
-      ret = pair[1].eat(pair[0])
-      @living_things.delete_if{|t| t[:model].eql? pair[0]} if ret
-      deleted[pair[0]] = true if ret
     end
 
     #死んだり生まれたり
@@ -89,6 +84,12 @@ class AppController
           new_living_things.push(model: grass, view: GrassView.new(grass), in: {})
         end
       end
+      children_model = thing[:model].breed
+      children = children_model.map do |model|
+        view = Object.const_get(model.class.to_s + "View").new(model)
+        {:model => model, :view => view, :in => {}}
+      end
+      new_living_things.concat children
     end
     @living_things.delete_if{|thing| thing[:model].dead?}
     @living_things.concat new_living_things

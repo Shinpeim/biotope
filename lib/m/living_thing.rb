@@ -27,7 +27,7 @@ class LivingThing
     @go_straight_to = 70 + rand(50)
 
     unless @stage.include?(min: {x: @min_x, y: @min_y}, max: {x: @max_x, y: @max_y})
-        raise ArgumentError "grass must be included in stage"
+        raise ArgumentsError "grass must be included in stage"
     end
   end
 
@@ -93,6 +93,22 @@ class LivingThing
       mod -= 1
     end
     return grasses
+  end
+
+  def breed
+    children = []
+    while(@nutriment >= self.class::INITIAL_NUTRIMENT * 2)
+      point = {:x => @min_x + rand(self.class::WIDTH  * 2) - self.class::WIDTH,
+               :y => @min_y + rand(self.class::HEIGHT * 2) - self.class::HEIGHT}
+      begin
+        child = self.class.new(@stage,point)
+      rescue
+        redo
+      end
+      children.push child
+      @nutriment -= self.class::INITIAL_NUTRIMENT
+    end
+    return children
   end
 
   def conflict?(target)

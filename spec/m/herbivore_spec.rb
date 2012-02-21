@@ -277,4 +277,39 @@ describe Herbivore do
     end
   end
 
+  #繁殖について
+  describe "繁殖について" do
+
+    describe "栄養が初期値の2倍未満のとき" do
+      before do
+        @herbivore = Herbivore.new(@stage, @center_point, Herbivore::INITIAL_NUTRIMENT * 2 - 1)
+        @children  = @herbivore.breed
+      end
+
+      it "子供を生めない" do
+        @children.size.should == 0
+      end
+
+      it "生んでないので養分もかわらない" do
+        @herbivore.nutriment.should == Herbivore::INITIAL_NUTRIMENT * 2 - 1
+      end
+    end
+
+    describe "栄養が初期値の2倍のとき" do
+      before do
+        @herbivore = Herbivore.new(@stage, @center_point, Herbivore::INITIAL_NUTRIMENT * 2)
+        @children  = @herbivore.breed
+      end
+
+      it "子供を一匹生む" do
+        @children.size.should == 1
+        @children.should be_all {|item|item.class == Herbivore}
+      end
+
+      it "こもど分の養分が減る" do
+        @herbivore.nutriment.should == Herbivore::INITIAL_NUTRIMENT
+      end
+    end
+
+  end
 end
